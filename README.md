@@ -10,4 +10,4 @@
 
 ITK Mesh IO for the MZ3 format, a simple, small, fast triangle mesh file format.
 
-For more information, see the MZ3 format specification: https://github.com/neurolabusc/surf-ice/tree/master/mz3
+For more information, see the [MZ3 format specification](https://github.com/neurolabusc/surf-ice/tree/master/mz3).
