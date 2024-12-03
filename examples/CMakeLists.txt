@@ -6,13 +6,21 @@ set(ExampleSpecificComponents
   )
 
 if(NOT ITK_SOURCE_DIR)
-  find_package(ITK REQUIRED COMPONENTS ITKImageIO ITKTransformIO ${ExampleSpecificComponents})
+  find_package(ITK REQUIRED COMPONENTS ITKMeshIO ${ExampleSpecificComponents})
 else()
-  # When being built as part of ITK, ITKImageIO and ITKTransformIO
+  # When being built as part of ITK, ITKMeshIO
   # lists of modules are not yet ready, causing a configure error
   find_package(ITK REQUIRED COMPONENTS ${ExampleSpecificComponents})
 endif()
 include(${ITK_USE_FILE})
 
-add_executable(WriteMZ3Mesh WriteMZ3Mesh.cxx )
-target_link_libraries(WriteMZ3Mesh ${ITK_LIBRARIES})
+add_executable(ReadWriteMZ3Mesh ReadWriteMZ3Mesh.cxx)
+target_link_libraries(ReadWriteMZ3Mesh ${ITK_LIBRARIES})
+
+enable_testing()
+add_test(NAME ReadWriteMZ3MeshTest
+  COMMAND ReadWriteMZ3Mesh
+    ${CMAKE_CURRENT_SOURCE_DIR}/cortex_5124.mz3
+    ${CMAKE_CURRENT_BINARY_DIR}/cortex_5124_itk.mz3
+    1
+  )

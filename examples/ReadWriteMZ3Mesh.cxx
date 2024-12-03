@@ -16,11 +16,10 @@
  *
  *=========================================================================*/
 
-#include "itkMZ3MeshIO.h"
-
 #include "itkCommand.h"
-#include "itkImageFileReader.h"
-#include "itkImageFileWriter.h"
+#include "itkMeshFileReader.h"
+#include "itkMeshFileWriter.h"
+#include "itkMesh.h"
 
 
 int main( int argc, char * argv[] )
@@ -29,17 +28,30 @@ int main( int argc, char * argv[] )
     {
     std::cerr << "Missing parameters." << std::endl;
     std::cerr << "Usage: " << argv[0]
-      << " inputImage"
-      << " outputImage"
-      << " parameters" << std::endl;
+      << " inputMesh"
+      << " outputMesh"
+      << " useCompression" << std::endl;
     return EXIT_FAILURE;
     }
 
+  char * inputMeshFileName = argv[1];
+  char * outputMeshFileName = argv[2];
+  bool useCompression = std::stoi( argv[3] );
 
-  // Please, write a complete, self-containted and useful example that
-  // demonstrate a class when being used along with other ITK classes or in
-  // the context of a wider or specific application.
+  constexpr unsigned int Dimension = 3;
+  using PixelType = float;
+  using MeshType = itk::Mesh< PixelType, Dimension >;
 
+  // Read the mesh
+  // Any mesh format supported by ITK can be used here, including MZ3.
+  const auto mesh = itk::ReadMesh< MeshType >( inputMeshFileName );
+
+  mesh->Print( std::cout );
+
+  // Write the mesh
+  // Any mesh format supported by ITK can be used here, including MZ3.
+  // If useCompression is true, an MZ3 file includes GZip compression.
+  itk::WriteMesh( mesh, outputMeshFileName, useCompression );
 
   return EXIT_SUCCESS;
 }
