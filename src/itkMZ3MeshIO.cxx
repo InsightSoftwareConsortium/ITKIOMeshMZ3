@@ -513,6 +513,10 @@ MZ3MeshIO::WritePoints(void * buffer)
       WritePoints(static_cast<long double *>(buffer));
       break;
     }
+    default:
+    {
+      itkExceptionMacro("Unsupported point component type");
+    }
   }
 }
 
