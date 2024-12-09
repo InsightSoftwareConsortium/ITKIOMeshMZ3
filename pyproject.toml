@@ -4,7 +4,7 @@ build-backend = "scikit_build_core.build"
 
 [project]
 name = "itk-iomeshmz3"
-version = "0.1.0"
+version = "0.1.1"
 description = "ITK Mesh IO for the MZ3 format, a simple, small, fast triangle mesh file format."
 readme = "README.md"
 license = {file = "LICENSE"}
