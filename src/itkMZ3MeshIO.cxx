@@ -92,7 +92,7 @@ MZ3MeshIO::CanReadFile(const char * fileName)
   {
     return true;
   }
-  
+
   return false;
 }
 
@@ -252,7 +252,8 @@ MZ3MeshIO::ReadPoints(void * buffer)
     // Skip header and optional skip bytes
     gzseek(m_Internal->m_GzFile, 16 + m_Internal->m_Skip, SEEK_SET);
     // Skip faces if present
-    if (m_Internal->m_Attributes & 1) {
+    if (m_Internal->m_Attributes & 1)
+    {
       gzseek(m_Internal->m_GzFile, m_NumberOfCells * 12, SEEK_CUR);
     }
     // Read vertex coordinates
@@ -263,7 +264,8 @@ MZ3MeshIO::ReadPoints(void * buffer)
     // Skip header and optional skip bytes
     m_Ifstream.seekg(16 + m_Internal->m_Skip);
     // Skip faces if present
-    if (m_Internal->m_Attributes & 1) {
+    if (m_Internal->m_Attributes & 1)
+    {
       m_Ifstream.seekg(m_NumberOfCells * 12, std::ios::cur);
     }
     // Read vertex coordinates
@@ -296,11 +298,13 @@ MZ3MeshIO::ReadCells(void * buffer)
   }
 
   SizeValueType index = 0;
-  const auto bufferAsUint = static_cast<uint32_t *>(buffer);
-  for (SizeValueType i = 0; i < m_NumberOfCells; ++i) {
+  const auto    bufferAsUint = static_cast<uint32_t *>(buffer);
+  for (SizeValueType i = 0; i < m_NumberOfCells; ++i)
+  {
     bufferAsUint[index++] = static_cast<unsigned int>(CellGeometryEnum::TRIANGLE_CELL);
     bufferAsUint[index++] = 3;
-    for (unsigned int j = 0; j < 3; ++j) {
+    for (unsigned int j = 0; j < 3; ++j)
+    {
       bufferAsUint[index++] = faceBuffer[i * 3 + j];
     }
   }
@@ -323,19 +327,26 @@ MZ3MeshIO::ReadPointData(void * buffer)
     // Skip header and optional skip bytes
     gzseek(m_Internal->m_GzFile, 16 + m_Internal->m_Skip, SEEK_SET);
     // Skip faces if present
-    if (m_Internal->m_Attributes & 1) {
+    if (m_Internal->m_Attributes & 1)
+    {
       gzseek(m_Internal->m_GzFile, m_NumberOfCells * 12, SEEK_CUR);
     }
     // Skip vertices if present
-    if (m_Internal->m_Attributes & 2) {
+    if (m_Internal->m_Attributes & 2)
+    {
       gzseek(m_Internal->m_GzFile, m_NumberOfPoints * 12, SEEK_CUR);
     }
     // Read point data
-    if (isRGBA) {
+    if (isRGBA)
+    {
       gzread(m_Internal->m_GzFile, buffer, m_NumberOfPointPixels * 4);
-    } else if (isScalar) {
+    }
+    else if (isScalar)
+    {
       gzread(m_Internal->m_GzFile, buffer, m_NumberOfPointPixels * 4);
-    } else if (isDouble) {
+    }
+    else if (isDouble)
+    {
       gzread(m_Internal->m_GzFile, buffer, m_NumberOfPointPixels * 8);
     }
   }
@@ -344,19 +355,26 @@ MZ3MeshIO::ReadPointData(void * buffer)
     // Skip header and optional skip bytes
     m_Ifstream.seekg(16 + m_Internal->m_Skip);
     // Skip faces if present
-    if (m_Internal->m_Attributes & 1) {
+    if (m_Internal->m_Attributes & 1)
+    {
       m_Ifstream.seekg(m_NumberOfCells * 12, std::ios::cur);
     }
     // Skip vertices if present
-    if (m_Internal->m_Attributes & 2) {
+    if (m_Internal->m_Attributes & 2)
+    {
       m_Ifstream.seekg(m_NumberOfPoints * 12, std::ios::cur);
     }
     // Read point data
-    if (isRGBA) {
+    if (isRGBA)
+    {
       m_Ifstream.read(static_cast<char *>(buffer), m_NumberOfPointPixels * 4);
-    } else if (isScalar) {
+    }
+    else if (isScalar)
+    {
       m_Ifstream.read(static_cast<char *>(buffer), m_NumberOfPointPixels * 4);
-    } else if (isDouble) {
+    }
+    else if (isDouble)
+    {
       m_Ifstream.read(static_cast<char *>(buffer), m_NumberOfPointPixels * 8);
     }
   }
@@ -396,8 +414,8 @@ MZ3MeshIO::WriteMeshInformation()
   }
 
   // Write header
-  uint8_t magic1 = 0x4D;
-  uint8_t magic2 = 0x5A;
+  uint8_t  magic1 = 0x4D;
+  uint8_t  magic2 = 0x5A;
   uint16_t attr = 0;
   if (this->m_NumberOfCells > 0)
   {
@@ -409,17 +427,22 @@ MZ3MeshIO::WriteMeshInformation()
   }
   uint32_t nskip = 0;
 
-  if (this->m_PointPixelType == IOPixelEnum::SCALAR && this->m_PointPixelComponentType == IOComponentEnum::FLOAT) {
+  if (this->m_PointPixelType == IOPixelEnum::SCALAR && this->m_PointPixelComponentType == IOComponentEnum::FLOAT)
+  {
     attr |= 8;
   }
-  else if (this->m_PointPixelType == IOPixelEnum::SCALAR && this->m_PointPixelComponentType == IOComponentEnum::DOUBLE) {
+  else if (this->m_PointPixelType == IOPixelEnum::SCALAR && this->m_PointPixelComponentType == IOComponentEnum::DOUBLE)
+  {
     attr |= 16;
   }
-  else if (this->m_PointPixelType == IOPixelEnum::RGBA) {
+  else if (this->m_PointPixelType == IOPixelEnum::RGBA)
+  {
     attr |= 4;
   }
-  else if (this->m_PointPixelType == IOPixelEnum::SCALAR) {
-    switch (this->m_PointPixelComponentType) {
+  else if (this->m_PointPixelType == IOPixelEnum::SCALAR)
+  {
+    switch (this->m_PointPixelComponentType)
+    {
       case IOComponentEnum::UCHAR:
         // Write as float
         attr |= 8;
@@ -495,7 +518,8 @@ MZ3MeshIO::WritePoints(void * buffer)
         // Skip header and optional skip bytes
         m_Ofstream.seekp(16 + m_Internal->m_Skip);
         // Skip faces if present
-        if (m_Internal->m_Attributes & 1) {
+        if (m_Internal->m_Attributes & 1)
+        {
           m_Ofstream.seekp(m_NumberOfCells * 12, std::ios::cur);
         }
         // Write vertex coordinates
@@ -580,7 +604,6 @@ MZ3MeshIO::WriteCells(void * buffer)
       itkExceptionMacro("Unsupported cell component type" << std::endl);
     }
   }
-
 }
 
 void
@@ -593,13 +616,17 @@ MZ3MeshIO::WritePointData(void * buffer)
   }
   if (m_IsCompressed)
   {
-    if (this->m_PointPixelType == IOPixelEnum::RGBA && this->m_PointPixelComponentType == IOComponentEnum::UCHAR) {
+    if (this->m_PointPixelType == IOPixelEnum::RGBA && this->m_PointPixelComponentType == IOComponentEnum::UCHAR)
+    {
       gzwrite(m_Internal->m_GzFile, buffer, m_NumberOfPointPixels * 4);
     }
-    else if (this->m_PointPixelType == IOPixelEnum::SCALAR && this->m_PointPixelComponentType == IOComponentEnum::DOUBLE) {
+    else if (this->m_PointPixelType == IOPixelEnum::SCALAR &&
+             this->m_PointPixelComponentType == IOComponentEnum::DOUBLE)
+    {
       gzwrite(m_Internal->m_GzFile, buffer, m_NumberOfPointPixels * 8);
     }
-    else if (this->m_PointPixelType == IOPixelEnum::SCALAR && this->m_PointPixelComponentType == IOComponentEnum::FLOAT) {
+    else if (this->m_PointPixelType == IOPixelEnum::SCALAR && this->m_PointPixelComponentType == IOComponentEnum::FLOAT)
+    {
       gzwrite(m_Internal->m_GzFile, buffer, m_NumberOfPointPixels * 4);
     }
     else
@@ -635,20 +662,26 @@ MZ3MeshIO::WritePointData(void * buffer)
     // Skip header and optional skip bytes
     m_Ofstream.seekp(16 + m_Internal->m_Skip);
     // Skip faces if present
-    if (m_Internal->m_Attributes & 1) {
+    if (m_Internal->m_Attributes & 1)
+    {
       m_Ofstream.seekp(m_NumberOfCells * 12, std::ios::cur);
     }
     // Skip vertices if present
-    if (m_Internal->m_Attributes & 2) {
+    if (m_Internal->m_Attributes & 2)
+    {
       m_Ofstream.seekp(m_NumberOfPoints * 12, std::ios::cur);
     }
-    if (this->m_PointPixelType == IOPixelEnum::RGBA && this->m_PointPixelComponentType == IOComponentEnum::UCHAR) {
+    if (this->m_PointPixelType == IOPixelEnum::RGBA && this->m_PointPixelComponentType == IOComponentEnum::UCHAR)
+    {
       m_Ofstream.write(static_cast<char *>(buffer), m_NumberOfPointPixels * 4);
     }
-    else if (this->m_PointPixelType == IOPixelEnum::SCALAR && this->m_PointPixelComponentType == IOComponentEnum::DOUBLE) {
+    else if (this->m_PointPixelType == IOPixelEnum::SCALAR &&
+             this->m_PointPixelComponentType == IOComponentEnum::DOUBLE)
+    {
       m_Ofstream.write(static_cast<char *>(buffer), m_NumberOfPointPixels * 8);
     }
-    else if (this->m_PointPixelType == IOPixelEnum::SCALAR && this->m_PointPixelComponentType == IOComponentEnum::FLOAT) {
+    else if (this->m_PointPixelType == IOPixelEnum::SCALAR && this->m_PointPixelComponentType == IOComponentEnum::FLOAT)
+    {
       m_Ofstream.write(static_cast<char *>(buffer), m_NumberOfPointPixels * 4);
     }
     else

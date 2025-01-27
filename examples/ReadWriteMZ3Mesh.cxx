@@ -22,36 +22,36 @@
 #include "itkMesh.h"
 
 
-int main( int argc, char * argv[] )
+int
+main(int argc, char * argv[])
 {
-  if( argc < 4 )
-    {
+  if (argc < 4)
+  {
     std::cerr << "Missing parameters." << std::endl;
-    std::cerr << "Usage: " << argv[0]
-      << " inputMesh"
-      << " outputMesh"
-      << " useCompression" << std::endl;
+    std::cerr << "Usage: " << argv[0] << " inputMesh"
+              << " outputMesh"
+              << " useCompression" << std::endl;
     return EXIT_FAILURE;
-    }
+  }
 
   char * inputMeshFileName = argv[1];
   char * outputMeshFileName = argv[2];
-  bool useCompression = std::stoi( argv[3] );
+  bool   useCompression = std::stoi(argv[3]);
 
   constexpr unsigned int Dimension = 3;
   using PixelType = float;
-  using MeshType = itk::Mesh< PixelType, Dimension >;
+  using MeshType = itk::Mesh<PixelType, Dimension>;
 
   // Read the mesh
   // Any mesh format supported by ITK can be used here, including MZ3.
-  const auto mesh = itk::ReadMesh< MeshType >( inputMeshFileName );
+  const auto mesh = itk::ReadMesh<MeshType>(inputMeshFileName);
 
-  mesh->Print( std::cout );
+  mesh->Print(std::cout);
 
   // Write the mesh
   // Any mesh format supported by ITK can be used here, including MZ3.
   // If useCompression is true, an MZ3 file includes GZip compression.
-  itk::WriteMesh( mesh, outputMeshFileName, useCompression );
+  itk::WriteMesh(mesh, outputMeshFileName, useCompression);
 
   return EXIT_SUCCESS;
 }

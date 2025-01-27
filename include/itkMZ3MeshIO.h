@@ -31,11 +31,11 @@ class MZ3MeshIOInternals;
 /** \class MZ3MeshIO
  *
  * \brief Read and write the MZ3 triangle mesh file format.
- * 
+ *
  * The MZ3 file format is a binary file format for storing triangle meshes.
- * 
+ *
  * The file format is as follows:
- * 
+ *
  * - 2 bytes: magic number 0x4D5A
  * - 2 bytes: attributes
  * - 4 bytes: number of faces
@@ -130,7 +130,6 @@ public:
   Write() override;
 
 protected:
-
 protected:
   MZ3MeshIO();
   ~MZ3MeshIO() override;
@@ -141,9 +140,9 @@ protected:
   class MZ3MeshIOInternals
   {
   public:
-    gzFile m_GzFile;
-    uint16_t m_Attributes{ 0 };
-    uint32_t m_Skip{ 0 };
+    gzFile             m_GzFile;
+    uint16_t           m_Attributes{ 0 };
+    uint32_t           m_Skip{ 0 };
     std::vector<float> m_VertexBuffer;
   };
 
@@ -152,7 +151,7 @@ protected:
   WritePoints(T * buffer)
   {
     SizeValueType index{};
-    float component{};
+    float         component{};
 
     if (m_IsCompressed)
     {
@@ -173,7 +172,8 @@ protected:
       // Skip header and optional skip bytes
       m_Ofstream.seekp(16 + m_Internal->m_Skip);
       // Skip faces if present
-      if (m_Internal->m_Attributes & 1) {
+      if (m_Internal->m_Attributes & 1)
+      {
         m_Ofstream.seekp(m_NumberOfCells * 12, std::ios::cur);
       }
       // Write vertex coordinates
@@ -186,7 +186,6 @@ protected:
         }
       }
     }
-
   }
 
   template <typename T>
@@ -194,15 +193,17 @@ protected:
   WriteCells(T * buffer)
   {
     SizeValueType index{};
-    uint32_t component;
+    uint32_t      component;
 
     if (m_IsCompressed)
     {
       // Write face indices
-      for(SizeValueType i = 0; i < m_NumberOfCells; ++i) {
+      for (SizeValueType i = 0; i < m_NumberOfCells; ++i)
+      {
         const auto cellType = buffer[index++];
         const auto numberOfPoints = buffer[index++];
-        if (numberOfPoints == 3) {
+        if (numberOfPoints == 3)
+        {
           for (unsigned int jj = 0; jj < 3; ++jj)
           {
             component = static_cast<uint32_t>(buffer[index++]);
@@ -223,14 +224,16 @@ protected:
       // Skip header and optional skip bytes
       m_Ofstream.seekp(16 + m_Internal->m_Skip);
       // Write face indices
-      for(SizeValueType i = 0; i < m_NumberOfCells; ++i) {
+      for (SizeValueType i = 0; i < m_NumberOfCells; ++i)
+      {
         const auto cellType = buffer[index++];
         const auto numberOfPoints = buffer[index++];
-        if (numberOfPoints == 3) {
+        if (numberOfPoints == 3)
+        {
           for (unsigned int jj = 0; jj < 3; ++jj)
           {
             component = static_cast<uint32_t>(buffer[index++]);
-            m_Ofstream.write(reinterpret_cast<char*>(&component), sizeof(uint32_t));
+            m_Ofstream.write(reinterpret_cast<char *>(&component), sizeof(uint32_t));
           }
         }
         else
@@ -247,7 +250,7 @@ protected:
   WritePointData(T * buffer)
   {
     SizeValueType index{};
-    float component{};
+    float         component{};
 
     if (m_IsCompressed)
     {

@@ -53,7 +53,7 @@ MZ3MeshIOFactory::GetDescription() const
 // Undocumented API used to register during static initialization.
 // DO NOT CALL DIRECTLY.
 void IOMeshMZ3_EXPORT
-     MZ3MeshIOFactoryRegister__Private()
+MZ3MeshIOFactoryRegister__Private()
 {
   ObjectFactoryBase::RegisterInternalFactoryOnce<MZ3MeshIOFactory>();
 }
